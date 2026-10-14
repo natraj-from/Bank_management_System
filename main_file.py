@@ -42,12 +42,13 @@ def connect():
 def create_table():
     con=connect()
     try :
-        cur=con.connect()
+        cur=con.cursor()
         for queries in Table:
             cur.execute(queries)
         con.commit()
 
     finally:
+        cur.close()
         con.close()
 
 def get_acc (cur,Account_No,lock=False):
@@ -56,6 +57,6 @@ def get_acc (cur,Account_No,lock=False):
         "FROM Accounts WHERE Account_NO = %s"
     )
     if lock:
-        sql+="FOR UPDATE"
+        sql+="  FOR UPDATE"
     cur.execute(sql,(Account_No,))
     return cur.fetchone()
